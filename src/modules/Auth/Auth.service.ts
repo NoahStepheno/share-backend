@@ -12,7 +12,7 @@ export default class AuthService {
     const clientID = this.configService.get<string>('auth.clientId')
     const clientSecret = this.configService.get<string>('auth.clientSecret')
     
-    const tokenResponse: any = axios({
+    const tokenResponse: any = await axios({
       method: 'post',
       url: 'https://github.com/login/oauth/access_token?' +
         `client_id=${clientID}&` +

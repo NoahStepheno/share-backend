@@ -7,19 +7,17 @@ export default class UserService {
   constructor(
     private readonly configService: ConfigService
   ) {}
+
   async getUserInfo(token: string) {
-    const clientID = this.configService.get<string>('auth.clientId')
-    const clientSecret = this.configService.get<string>('auth.clientSecret')
-    const tokenResponse = await axios({
-      method: 'post',
-      url: 'https://github.com/login/oauth/access_token?' +
-        `client_id=${clientID}&` +
-        `client_secret=${clientSecret}&` +
-        `code=${token}`,
+    if (!token) return null
+    const result = await axios({
+      method: 'get',
+      url: `https://api.github.com/user`,
       headers: {
-        accept: 'application/json'
+        accept: 'application/json',
+        Authorization: `token ${token}`
       }
     });
-    return tokenResponse
+    return result.data
   }
 }
