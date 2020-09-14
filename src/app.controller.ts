@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 
@@ -11,9 +11,9 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   @Get('protected')
-  getProtected(): string {
-    return 'This route is protected.';
+  getProtected(@Request() req): string {
+    return req.user
   }
 }

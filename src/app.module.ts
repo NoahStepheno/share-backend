@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Connection } from 'typeorm';
 import * as path from 'path'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -17,7 +16,7 @@ import UserModule from './modules/User/User.module';
       envFilePath: path.join(__dirname, '..', 'env/.env'),
       isGlobal:true,
     }),
-    // TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,44 +1,19 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy as BaseStrategy, ExtractJwt } from 'passport-jwt';
-import { passportJwtSecret } from 'jwks-rsa';
-
-import { JwtPayload } from './interfaces/jwt-payload';
+import { JWT_CONSTANT } from './Auth.const';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(BaseStrategy) {
-  constructor(configService: ConfigService) {
+  constructor() {
     super({
-      secretOrKeyProvider: passportJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: `https://${configService.get<string>(
-          'auth.domain',
-        )}/.well-known/jwks.json`,
-      }),
-
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      audience: configService.get<string>('auth.audience'),
-      issuer: `https://${configService.get<string>('auth.domain')}`,
-      algorithms: ['RS256'],
+      ignoreExpiration: false,
+      secretOrKey: JWT_CONSTANT.secret,
     });
   }
 
-  validate(payload: JwtPayload): JwtPayload {
-    const minimumScope = ['openid', 'profile', 'email'];
-
-    if (
-      payload?.scope
-        ?.split(' ')
-        .filter((scope) => minimumScope.indexOf(scope) > -1).length !== 3
-    ) {
-      throw new UnauthorizedException(
-        'JWT does not possess the required scope (`openid profile email`).',
-      );
-    }
-
-    return payload;
+  async validate(payload: any) {
+    return { userId: payload.sub, username: payload.username };
   }
 }

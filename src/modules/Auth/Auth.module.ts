@@ -5,11 +5,21 @@ import oauth from '../../config/oauth';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './Auth.controller';
 import AuthService from './Auth.service';
+import UserModule from '../User/User.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JWT_CONSTANT } from './Auth.const';
 
 @Module({
   imports: [
     ConfigModule.forFeature(oauth),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
+    UserModule,
+    JwtModule.register({
+      secret: JWT_CONSTANT.secret,
+      signOptions: {
+        expiresIn: '60s'
+      }
+    })
   ],
   providers: [JwtStrategy, AuthService],
   exports: [PassportModule, JwtStrategy],
