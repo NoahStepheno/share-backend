@@ -6,17 +6,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/Auth/Auth.module';
 import UserModule from './modules/User/User.module';
-
+import CollectionModule from './modules/Collection/module';
+import ArticleModule from './modules/Article/module';
 
 @Module({
   imports: [
-    AuthModule,
-    UserModule,
     ConfigModule.forRoot({
       envFilePath: path.join(__dirname, '..', 'env/.env'),
       isGlobal:true,
     }),
     TypeOrmModule.forRoot(),
+    AuthModule,
+    UserModule,
+    CollectionModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

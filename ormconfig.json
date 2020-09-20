@@ -5,6 +5,9 @@
   "username": "root",
   "password": "password",
   "database": "share",
-  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "entities": [
+    "dist/**/*.entity{.ts,.js}",
+    "dist/**/entity{.ts,.js}"
+  ],
   "synchronize": true
 }

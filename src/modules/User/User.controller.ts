@@ -1,5 +1,6 @@
-import { Controller, Get, Req } from "@nestjs/common";
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import UserService from './User.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -7,15 +8,9 @@ export class UserController {
     private readonly userService: UserService
   ) {}
 
-  @Get('test')
-  test() {
-    return 'hello test'
-  }
-
+  @UseGuards(AuthGuard('jwt'))
   @Get('info')
   async getInfo(@Req() req) {
-    const token = req.signedCookies.token
-    const info = await this.userService.getUserInfo(token)
-    return info
+    return await this.userService.findOne(req.user.userId)
   }
 }

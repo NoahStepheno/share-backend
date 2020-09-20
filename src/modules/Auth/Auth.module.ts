@@ -21,8 +21,8 @@ import { JWT_CONSTANT } from './Auth.const';
       }
     })
   ],
-  providers: [JwtStrategy, AuthService],
-  exports: [PassportModule, JwtStrategy],
+  providers: [AuthService, JwtStrategy],
+  exports: [AuthService],
   controllers: [AuthController]
 })
 export class AuthModule {}

@@ -14,7 +14,9 @@ export class User {
   @Column()
   githubID: number
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   email: string
 
   @Column({ default: true })

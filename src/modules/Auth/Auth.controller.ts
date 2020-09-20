@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Res, Req } from '@nestjs/common';
+import { Controller, Get, Query, Res, Redirect } from '@nestjs/common';
 import AuthService from './Auth.service'
 
 @Controller()
@@ -6,13 +6,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('oauth/redirect')
-  async oauth(@Query('code') code, @Res() res): Promise<void> {
+  @Redirect('http://localhost:9000', 302)
+  async oauth(@Query('code') code, @Res() res): Promise<any> {
     const token = await this.authService.getAccessToken(code)
     if (!token) {
-      res.status(302).redirect(`http://localhost:9000/#/failed`)
-      return
+      return { url: 'http://localhost:9000/#/failed' }
     }
-    res.cookie('token', token, { maxAge: 1 * 24 * 3600 * 1e3, httpOnly: true, signed: true })
-    res.status(302).redirect(`http://localhost:9000/#/`)
+    await this.authService.login(token, res)
+    return { url: `http://localhost:9000/#/` }
   }
 }

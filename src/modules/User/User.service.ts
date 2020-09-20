@@ -13,16 +13,20 @@ export default class UserService {
     private userRepository: Repository<User>
   ) {}
 
-  findOne (id: number) {
-    return this.userRepository.findOne(id)
+  async findOne (id: number) {
+    return await this.userRepository.findOne(id)
   }
 
-  create(user: User) {
-    return this.userRepository.save(user)
+  async find (...args) {
+    return await this.userRepository.findOne(...args)
   }
 
-  update(user: User) {
-    return this.userRepository.save(user)
+  async create(user: User) {
+    return await this.userRepository.save(user)
+  }
+
+  async update(user: User) {
+    return await this.userRepository.save(user)
   }
 
   async getUserInfo(token: string) {
