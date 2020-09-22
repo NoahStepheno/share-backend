@@ -1,28 +1,31 @@
-FROM node:12.13-alpine As development
+FROM node:14-alpine
 
+# Set necessary environment variables.
+ENV NODE_ENV=production
+
+
+# Set the default working directory for the app
+# It is a best practice to use the /usr/src/app directory
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install --only=development
+RUN npm set strict-ssl false
+
+RUN npm install --only=production
+
+RUN npm install -g @nestjs/cli
+
 
 COPY . .
 
 RUN npm run build
 
-FROM node:12.13-alpine as production
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# Expose API port
+EXPOSE 3000
 
-WORKDIR /usr/src/app
+CMD [ "ls" ]
 
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY . .
-
-COPY --from=development /usr/src/app/dist ./dist
-
-CMD ["node", "dist/main"]
+# Run the web service on container startup
+CMD [ "npm", "start:prod" ]
